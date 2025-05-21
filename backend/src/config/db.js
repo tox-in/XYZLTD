@@ -24,8 +24,8 @@ const prisma = new PrismaClient({
 
 if (process.env.NODE_ENV === 'development') {
   prisma.$on('query', (e) => {
-    logger.debug(`Query: ${e.query}`);
-    logger.debug(`Duration: ${e.duration}ms`);
+    console.log(`Query: ${e.query}`);
+    console.log(`Duration: ${e.duration}ms`);
   });
 }
 

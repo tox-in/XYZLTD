@@ -20,7 +20,7 @@ const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Car Parking Management System API',
+      title: 'XYZ Ltd Parking System',
       version: '1.0.0',
       description: 'API documentation for Car Parking Management System',
     },
