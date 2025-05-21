@@ -49,7 +49,7 @@ const { validate, userSchemas } = require('../utils/validators');
 //  *       409:
 //  *         description: User with this email already exists
 //  */
-router.post('/register', register);
+router.post('/register',validate(userSchemas.register), register);
 
 // /**
 //  * @swagger
@@ -84,6 +84,6 @@ router.post('/register', register);
 //  *         description: Invalid email or password
 //  */
 
-router.post('/login', login);
+router.post('/login',validate(userSchemas.login), login);
 
 module.exports = router;
