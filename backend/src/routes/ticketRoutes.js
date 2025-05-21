@@ -3,6 +3,7 @@ const router = express.Router();
 const ticketController = require('../controllers/ticketController');
 const { authenticate } = require('../middleware/auth');
 const { checkRole } = require('../middleware/roleCheck');
+const { validate } = require('../utils/validators');
 
 /**
  * @swagger

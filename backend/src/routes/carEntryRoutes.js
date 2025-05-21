@@ -3,6 +3,7 @@ const router = express.Router();
 const carEntryController = require('../controllers/carEntryController');
 const { authenticate } = require('../middleware/auth');
 const { checkRole } = require('../middleware/roleCheck');
+const { validate, carEntrySchemas } = require('../utils/validators');
 
 /**
  * @swagger
@@ -38,7 +39,7 @@ const { checkRole } = require('../middleware/roleCheck');
  *       403:
  *         description: Forbidden
  */
-router.post('/', authenticate, checkRole(['admin', 'attendant']), carEntryController.registerCarEntry);
+router.post('/', authenticate, checkRole(['admin', 'attendant']), validate(carEntrySchemas.create), carEntryController.registerCarEntry);
 
 /**
  * @swagger
@@ -141,7 +142,7 @@ router.get('/:id', authenticate, checkRole(['admin', 'attendant']), carEntryCont
  *       403:
  *         description: Forbidden
  */
-router.put('/:carEntryId/exit', authenticate, checkRole(['admin', 'attendant']), carEntryController.registerCarExit);
+router.put('/:carEntryId/exit', authenticate, checkRole(['admin', 'attendant']), validate(carEntrySchemas.update), carEntryController.registerCarExit);
 
 /**
  * @swagger
