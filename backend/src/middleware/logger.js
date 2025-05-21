@@ -5,50 +5,45 @@ const logFormat = winston.format.combine(
   winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
   winston.format.errors({ stack: true }),
   winston.format.splat(),
-  winston.format.json()
+  winston.format.json(),
+  // Add this to properly log error objects
+  winston.format((info) => {
+    if (info instanceof Error) {
+      return Object.assign({}, info, {
+        message: info.message,
+        stack: info.stack
+      });
+    }
+    return info;
+  })()
 );
 
+// Add a dedicated validation error transport if needed
 const logger = winston.createLogger({
   level: process.env.NODE_ENV === 'development' ? 'debug' : 'info',
   format: logFormat,
   defaultMeta: { service: 'parking-management-system' },
   transports: [
-    // Write all logs with level 'error' and below to error.log
     new winston.transports.File({ 
       filename: path.join(__dirname, '../../logs/error.log'), 
-      level: 'error' 
+      level: 'error',
+      handleExceptions: true,
+      handleRejections: true
     }),
-    
-    // Write all logs with level 'info' and below to combined.log
     new winston.transports.File({ 
-      filename: path.join(__dirname, '../../logs/combined.log') 
+      filename: path.join(__dirname, '../../logs/combined.log'),
+      handleExceptions: true,
+      handleRejections: true
     }),
+    // Optional: dedicated validation error log
+    new winston.transports.File({
+      filename: path.join(__dirname, '../../logs/validation.log'),
+      level: 'error',
+      format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json()
+      ),
+      filter: (info) => info.message.includes('Validation error')
+    })
   ],
 });
-
-// If not in production, log to the console as well
-if (process.env.NODE_ENV !== 'production') {
-  logger.add(new winston.transports.Console({
-    format: winston.format.combine(
-      winston.format.colorize(),
-      winston.format.simple()
-    ),
-  }));
-}
-
-// Middleware for logging HTTP requests
-const requestLogger = (req, res, next) => {
-  logger.info({
-    message: 'HTTP Request',
-    method: req.method,
-    url: req.url,
-    ip: req.ip,
-    headers: req.headers,
-  });
-  next();
-};
-
-module.exports = {
-  logger,
-  requestLogger,
-};

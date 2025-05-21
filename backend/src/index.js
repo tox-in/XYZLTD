@@ -5,6 +5,16 @@ require('dotenv').config();
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  logger.info(`Server running on port ${PORT}`);
   console.log(`Server running on port ${PORT}`);
+});
+
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  // Optionally: process.exit(1);
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception thrown:', err);
+  // Optionally: process.exit(1);
 });
