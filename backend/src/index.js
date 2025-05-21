@@ -11,10 +11,10 @@ app.listen(PORT, () => {
 
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason);
-  // Optionally: process.exit(1);
+  //process.exit(1);
 });
 
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception thrown:', err);
-  // Optionally: process.exit(1);
+  //process.exit(1);
 });
